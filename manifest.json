@@ -1,0 +1,21 @@
+﻿{
+    "name": "بازنو | بازیافت هوشمند درب منزل",
+    "short_name": "بازنو",
+    "description": "بازیافت هوشمند درب منزل - زباله بده، پول بگیر",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#16a34a",
+    "theme_color": "#16a34a",
+    "dir": "rtl",
+    "lang": "fa",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
