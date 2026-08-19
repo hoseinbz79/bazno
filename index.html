@@ -1,0 +1,1390 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بازنو | نسخه مشتری</title>
+<style>
+:root {
+    --bg: #ffffff; --bg2: #f9fafb; --bg3: #f3f4f6; --card: #ffffff;
+    --text: #111827; --text2: #6b7280; --text3: #9ca3af; --border: #f3f4f6;
+    --green: #16a34a; --greenLight: #dcfce7; --greenBg: #f0fdf4;
+}
+body.dark {
+    --bg: #0f172a; --bg2: #1e293b; --bg3: #334155; --card: #1e293b;
+    --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b; --border: #334155;
+    --greenLight: #14532d; --greenBg: #052e16;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:Tahoma,'Segoe UI',sans-serif; }
+body { background:#e5e7eb; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:16px; transition:background .3s; }
+body.dark { background:#020617; }
+.phone { width:400px; max-width:100%; height:780px; max-height:95vh; background:var(--bg); border-radius:30px; border:8px solid #1f2937; overflow:hidden; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.3); transition:background .3s; }
+.view { display:none; height:100%; flex-direction:column; animation:fadeIn .3s; }
+.view.active { display:flex; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.ripple { position:relative; overflow:hidden; }
+.ripple::after { content:''; position:absolute; top:50%; left:50%; width:0; height:0; border-radius:50%; background:rgba(255,255,255,0.4); transform:translate(-50%,-50%); transition:width .4s, height .4s; }
+.ripple:active::after { width:300px; height:300px; }
+.auth-wrap { height:100%; background:linear-gradient(160deg,#16a34a 0%,#15803d 100%); display:flex; flex-direction:column; padding:40px 28px; color:#fff; position:relative; overflow:hidden; }
+.floating-leaf { position:absolute; font-size:24px; opacity:0.3; animation:floatLeaf 8s infinite linear; }
+@keyframes floatLeaf { 0%{transform:translateY(-50px) rotate(0deg);} 100%{transform:translateY(800px) rotate(360deg);} }
+.auth-logo { text-align:center; margin-top:40px; margin-bottom:30px; animation:bounceIn .8s; }
+@keyframes bounceIn { 0%{transform:scale(0.3);opacity:0;} 50%{transform:scale(1.05);} 70%{transform:scale(0.95);} 100%{transform:scale(1);opacity:1;} }
+.auth-logo-icon { width:90px; height:90px; background:rgba(255,255,255,0.15); border-radius:28px; display:flex; align-items:center; justify-content:center; font-size:44px; margin:0 auto 18px; }
+.auth-logo-text { font-size:32px; font-weight:900; }
+.auth-logo-sub { font-size:13px; opacity:0.85; margin-top:6px; }
+.auth-card { background:var(--bg); border-radius:24px; padding:28px 22px; margin-top:auto; color:var(--text); box-shadow:0 10px 40px rgba(0,0,0,0.2); animation:slideUp .5s; }
+@keyframes slideUp { from{transform:translateY(40px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.auth-title { font-size:18px; font-weight:900; margin-bottom:6px; }
+.auth-sub { font-size:12px; color:var(--text2); margin-bottom:20px; }
+.input-label { font-size:12px; font-weight:bold; color:var(--text2); margin-bottom:6px; display:block; }
+.input-field { width:100%; padding:14px 16px; border:2px solid var(--border); border-radius:14px; font-size:15px; font-family:inherit; text-align:right; background:var(--bg); color:var(--text); }
+.input-field:focus { outline:none; border-color:#22c55e; }
+.input-field.en { text-align:left; direction:ltr; letter-spacing:2px; }
+.auth-btn { width:100%; background:var(--green); color:#fff; border:none; padding:15px; border-radius:14px; font-size:15px; font-weight:bold; cursor:pointer; font-family:inherit; box-shadow:0 6px 18px rgba(22,163,74,0.35); }
+.auth-btn:active { transform:scale(0.97); }
+.demo-btn { width:100%; background:var(--bg3); color:var(--text2); border:none; padding:13px; border-radius:14px; font-size:13px; font-weight:bold; cursor:pointer; font-family:inherit; margin-top:10px; }
+.auth-back { background:none; border:none; color:var(--text2); font-size:12px; cursor:pointer; font-family:inherit; margin-top:14px; width:100%; text-align:center; }
+.otp-boxes { display:flex; gap:8px; justify-content:center; direction:ltr; margin-bottom:20px; }
+.otp-box { width:48px; height:56px; text-align:center; font-size:22px; font-weight:bold; border:2px solid var(--border); border-radius:12px; background:var(--bg); color:var(--text); }
+.otp-box:focus { outline:none; border-color:#22c55e; transform:scale(1.05); }
+.resend-timer { text-align:center; font-size:11px; color:var(--text3); margin-bottom:16px; }
+.cust-header { background:var(--bg); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); z-index:5; }
+.logo-circle { width:42px; height:42px; background:var(--greenLight); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.cust-title { font-weight:900; font-size:17px; color:var(--text); }
+.cust-sub { font-size:10px; color:var(--text2); margin-top:2px; }
+.header-actions { display:flex; gap:8px; }
+.icon-btn { width:40px; height:40px; border-radius:50%; background:var(--bg2); border:none; font-size:17px; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+.icon-btn:active { transform:scale(0.9); }
+.notif-badge { position:absolute; top:-2px; right:-2px; width:16px; height:16px; background:#ef4444; color:#fff; border-radius:50%; font-size:9px; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid var(--bg); }
+.fake-map { flex:1; position:relative; background:linear-gradient(135deg,#d1fae5 0%,#e0f2fe 50%,#fef9c3 100%); overflow:hidden; }
+body.dark .fake-map { background:linear-gradient(135deg,#14532d 0%,#1e3a5f 50%,#3f3f46 100%); }
+.map-block { position:absolute; background:rgba(148,163,184,0.4); border-radius:6px; }
+body.dark .map-block { background:rgba(71,85,105,0.6); }
+.map-park { position:absolute; background:rgba(74,222,128,0.4); border-radius:12px; }
+body.dark .map-park { background:rgba(34,197,94,0.25); }
+.map-tree { position:absolute; font-size:18px; }
+.street { position:absolute; background:rgba(255,255,255,0.85); border-radius:4px; }
+body.dark .street { background:rgba(51,65,85,0.9); }
+.street.h { height:14px; left:-10%; right:-10%; }
+.street.v { width:14px; top:-10%; bottom:-10%; }
+.marker { position:absolute; width:40px; height:40px; transform:translate(-50%,-100%); z-index:10; transition:top .15s linear,left .15s linear; }
+.marker-customer { top:45%; left:48%; cursor:grab; }
+.marker-pin { width:40px; height:40px; background:#22c55e; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:3px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; }
+.marker-pin span { transform:rotate(45deg); font-size:16px; }
+.marker-driver .marker-pin { background:#1e293b; }
+.marker-pulse { position:absolute; top:50%; left:50%; width:60px; height:60px; margin:-30px 0 0 -30px; background:rgba(34,197,94,0.25); border-radius:50%; animation:pulse 2s infinite; }
+@keyframes pulse { 0%{transform:scale(0.5);opacity:0.8;} 100%{transform:scale(1.6);opacity:0;} }
+.nearby-driver { position:absolute; width:28px; height:28px; background:#fff; border-radius:50%; border:2px solid #22c55e; display:flex; align-items:center; justify-content:center; font-size:13px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index:8; animation:float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+.route-line { position:absolute; height:3px; background:repeating-linear-gradient(90deg,#1e293b 0,#1e293b 8px,transparent 8px,transparent 14px); z-index:5; display:none; }
+body.dark .route-line { background:repeating-linear-gradient(90deg,#fff 0,#fff 8px,transparent 8px,transparent 14px); }
+.status-banner { position:absolute; top:14px; left:50%; transform:translateX(-50%); background:rgba(30,41,59,0.95); color:#fff; padding:10px 20px; border-radius:99px; font-size:12px; font-weight:bold; z-index:25; display:none; align-items:center; gap:8px; white-space:nowrap; }
+.status-banner.show { display:flex; }
+.online-count { position:absolute; top:14px; right:14px; background:rgba(255,255,255,0.95); padding:8px 14px; border-radius:99px; font-size:10px; font-weight:bold; color:#16a34a; z-index:15; display:flex; align-items:center; gap:6px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+.loc-card { position:absolute; bottom:16px; left:16px; right:16px; background:var(--bg); padding:14px; border-radius:18px; box-shadow:0 4px 20px rgba(0,0,0,0.12); display:flex; align-items:center; gap:12px; z-index:20; }
+.loc-icon { width:42px; height:42px; background:var(--greenBg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.loc-label { font-size:9px; color:var(--text3); }
+.loc-text { font-size:12px; font-weight:bold; color:var(--text); margin-top:2px; }
+.bottom-sheet { background:var(--bg); border-radius:28px 28px 0 0; padding:20px; margin-top:-20px; position:relative; z-index:30; box-shadow:0 -8px 30px rgba(0,0,0,0.08); }
+.sheet-handle { width:48px; height:5px; background:var(--border); border-radius:99px; margin:0 auto 16px; }
+.sheet-title { font-weight:800; font-size:15px; color:var(--text); margin-bottom:14px; }
+.waste-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.waste-item { display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px; border-radius:14px; border:2px solid var(--border); cursor:pointer; transition:all .2s; background:var(--bg); }
+.waste-item:hover { border-color:#86efac; transform:translateY(-2px); }
+.waste-item.selected { border-color:#22c55e; background:var(--greenBg); animation:wiggle .3s; }
+@keyframes wiggle { 0%,100%{transform:rotate(0);} 25%{transform:rotate(-2deg);} 75%{transform:rotate(2deg);} }
+.waste-icon { font-size:22px; }
+.waste-name { font-size:10px; color:var(--text); font-weight:bold; }
+.price-hint { background:var(--greenBg); border-radius:12px; padding:10px 14px; font-size:11px; color:#15803d; margin-bottom:14px; display:flex; justify-content:space-between; }
+body.dark .price-hint { color:#4ade80; }
+.main-btn { width:100%; background:var(--green); color:#fff; border:none; padding:15px; border-radius:14px; font-size:14px; font-weight:bold; cursor:pointer; font-family:inherit; box-shadow:0 8px 20px rgba(22,163,74,0.3); transition:transform .15s; }
+.main-btn:active { transform:scale(0.97); }
+.schedule-btn { width:100%; background:var(--bg3); color:var(--text); border:none; padding:13px; border-radius:14px; font-size:13px; font-weight:bold; cursor:pointer; font-family:inherit; margin-top:10px; }
+.driver-card { display:none; }
+.driver-card.show { display:block; animation:slideUp .4s; }
+.dc-top { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+.dc-avatar { width:54px; height:54px; border-radius:50%; background:#fbbf24; display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; border:3px solid var(--greenLight); }
+.dc-info { flex:1; }
+.dc-name { font-size:15px; font-weight:900; color:var(--text); }
+.dc-meta { font-size:11px; color:var(--text2); margin-top:3px; }
+.dc-rating { background:#fef9c3; padding:6px 12px; border-radius:10px; font-size:12px; font-weight:900; color:#a16207; }
+.dc-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.dc-stat { background:var(--bg2); padding:10px; border-radius:12px; text-align:center; }
+.dc-stat-val { font-size:14px; font-weight:900; color:var(--text); }
+.dc-stat-label { font-size:9px; color:var(--text3); margin-top:2px; }
+.nav { background:var(--bg); border-top:1px solid var(--border); padding:8px 12px 12px; display:flex; justify-content:space-around; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:9px; color:var(--text3); cursor:pointer; background:none; border:none; font-family:inherit; flex:1; transition:transform .15s; }
+.nav-item:active { transform:scale(0.9); }
+.nav-item.active { color:var(--green); font-weight:bold; }
+.nav-item .ic { font-size:19px; }
+.overlay { position:absolute; inset:0; background:rgba(15,23,42,0.65); z-index:300; display:none; align-items:center; justify-content:center; padding:24px; }
+body.dark .overlay { background:rgba(0,0,0,0.75); }
+.overlay.show { display:flex; }
+.modal { background:var(--bg); border-radius:26px; padding:32px 26px; width:100%; text-align:center; animation:modalIn .3s cubic-bezier(0.16,1,0.3,1); max-height:90%; overflow-y:auto; }
+@keyframes modalIn { from{transform:translateY(30px) scale(0.95);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+.radar { width:130px; height:130px; margin:0 auto 22px; position:relative; }
+.radar-ring { position:absolute; inset:0; border:3px solid #22c55e; border-radius:50%; animation:radarPulse 1.8s infinite; opacity:0; }
+.radar-ring:nth-child(2) { animation-delay:0.6s; }
+.radar-ring:nth-child(3) { animation-delay:1.2s; }
+@keyframes radarPulse { 0%{transform:scale(0.3);opacity:0.9;} 100%{transform:scale(1);opacity:0;} }
+.radar-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:48px; }
+.modal-title { font-size:18px; font-weight:900; color:var(--text); margin-bottom:8px; }
+.modal-sub { font-size:12px; color:var(--text2); margin-bottom:20px; line-height:1.6; }
+.cancel-search-btn { background:none; border:none; color:#ef4444; font-size:13px; font-weight:bold; cursor:pointer; font-family:inherit; margin-top:8px; }
+.delivery-icon { font-size:56px; margin-bottom:16px; animation:bounceIn .6s; }
+.calc-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px dashed var(--border); font-size:13px; }
+.calc-row:last-of-type { border-bottom:none; }
+.calc-label { color:var(--text2); }
+.calc-val { font-weight:bold; color:var(--text); }
+.calc-total { background:var(--greenBg); border-radius:14px; padding:16px; margin:16px 0; display:flex; justify-content:space-between; align-items:center; }
+.calc-total-label { font-size:13px; font-weight:bold; color:#15803d; }
+body.dark .calc-total-label { color:#4ade80; }
+.calc-total-val { font-size:24px; font-weight:900; color:var(--green); }
+.stars { display:flex; justify-content:center; gap:10px; margin:20px 0; direction:ltr; }
+.star { font-size:38px; cursor:pointer; color:var(--border); transition:all .15s; }
+.star.filled { color:#fbbf24; transform:scale(1.15) rotate(15deg); }
+.rating-text { font-size:13px; font-weight:bold; color:var(--green); min-height:20px; margin-bottom:16px; }
+.success-check { width:90px; height:90px; background:var(--greenLight); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:44px; margin:0 auto 20px; animation:popIn .5s cubic-bezier(0.68,-0.55,0.27,1.55); }
+@keyframes popIn { from{transform:scale(0);} to{transform:scale(1);} }
+.earned-amount { font-size:30px; font-weight:900; color:var(--green); margin:12px 0 4px; }
+.day-options { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.day-opt { padding:12px 6px; border:2px solid var(--border); border-radius:12px; text-align:center; cursor:pointer; font-size:11px; font-weight:bold; color:var(--text); transition:all .2s; }
+.day-opt.selected { border-color:#22c55e; background:var(--greenBg); color:#15803d; }
+.time-options { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px; }
+.page-scroll { flex:1; overflow-y:auto; background:var(--bg2); padding:18px; }
+.order-history-card { background:var(--card); border-radius:18px; padding:16px; margin-bottom:12px; border:1px solid var(--border); animation:fadeIn .4s; }
+.order-h-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.order-h-id { font-size:11px; color:var(--text3); font-weight:bold; }
+.order-status { font-size:10px; font-weight:bold; padding:4px 10px; border-radius:99px; }
+.status-done { background:var(--greenLight); color:#15803d; }
+body.dark .status-done { color:#4ade80; }
+.order-h-main { display:flex; align-items:center; gap:12px; }
+.order-h-icon { width:44px; height:44px; border-radius:12px; background:var(--greenBg); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.order-h-info { flex:1; }
+.order-h-type { font-size:13px; font-weight:bold; color:var(--text); }
+.order-h-date { font-size:10px; color:var(--text3); margin-top:3px; }
+.order-h-price { font-size:13px; font-weight:900; color:var(--green); }
+.order-h-detail { display:flex; gap:14px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); font-size:10px; color:var(--text2); }
+.empty-state { text-align:center; padding:50px 20px; color:var(--text3); }
+.empty-state .es-icon { font-size:50px; margin-bottom:14px; }
+.wallet-card { background:linear-gradient(135deg,#16a34a,#15803d); border-radius:24px; padding:22px; color:#fff; margin-bottom:16px; box-shadow:0 10px 30px rgba(22,163,74,0.3); }
+.wallet-label { font-size:12px; opacity:0.85; }
+.wallet-balance { font-size:32px; font-weight:900; margin:6px 0 12px; }
+.wallet-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.wallet-action-btn { background:rgba(255,255,255,0.18); border:none; color:#fff; padding:12px; border-radius:12px; font-size:12px; font-weight:bold; cursor:pointer; font-family:inherit; }
+.coupon-box { background:var(--card); border:2px dashed #86efac; border-radius:16px; padding:16px; margin-bottom:16px; display:flex; align-items:center; gap:12px; }
+.coupon-input { flex:1; border:none; outline:none; font-size:13px; font-family:inherit; background:transparent; color:var(--text); }
+.coupon-btn { background:var(--green); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-size:12px; font-weight:bold; cursor:pointer; font-family:inherit; }
+.transaction-item { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); }
+.transaction-item:last-child { border-bottom:none; }
+.tr-icon { width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.tr-info { flex:1; }
+.tr-title { font-size:12px; font-weight:bold; color:var(--text); }
+.tr-date { font-size:10px; color:var(--text3); margin-top:2px; }
+.tr-amount { font-size:12px; font-weight:900; }
+.tr-plus { color:var(--green); }
+.tr-minus { color:#dc2626; }
+.club-hero { background:linear-gradient(135deg,#f59e0b,#d97706); border-radius:24px; padding:26px 22px; color:#fff; margin-bottom:16px; }
+.club-level-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.2); padding:6px 14px; border-radius:99px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+.club-points { font-size:36px; font-weight:900; margin:6px 0; }
+.club-progress { background:rgba(255,255,255,0.25); border-radius:99px; height:10px; margin-top:14px; overflow:hidden; }
+.club-progress-fill { background:#fff; height:100%; border-radius:99px; width:65%; transition:width .8s cubic-bezier(0.16,1,0.3,1); }
+.club-progress-label { font-size:10px; opacity:0.9; margin-top:8px; }
+.reward-card { background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid var(--border); display:flex; align-items:center; gap:14px; }
+.reward-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.reward-info { flex:1; }
+.reward-title { font-size:13px; font-weight:bold; color:var(--text); }
+.reward-sub { font-size:10px; color:var(--text3); margin-top:3px; }
+.reward-btn { background:#fef3c7; color:#92400e; border:none; padding:8px 14px; border-radius:10px; font-size:11px; font-weight:bold; cursor:pointer; font-family:inherit; }
+.impact-hero { background:linear-gradient(135deg,#0ea5e9,#0284c7); border-radius:24px; padding:26px 22px; color:#fff; margin-bottom:16px; text-align:center; }
+.impact-big { font-size:42px; font-weight:900; margin:8px 0; }
+.impact-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:16px; }
+.impact-card { background:var(--card); border-radius:18px; padding:18px; border:1px solid var(--border); text-align:center; }
+.impact-ic { font-size:28px; margin-bottom:8px; }
+.impact-val { font-size:20px; font-weight:900; color:var(--text); }
+.impact-label { font-size:10px; color:var(--text2); margin-top:4px; }
+.chart-container { background:var(--card); border-radius:18px; padding:20px; border:1px solid var(--border); }
+.chart-title { font-size:13px; font-weight:bold; color:var(--text); margin-bottom:16px; }
+.bar-chart { display:flex; align-items:flex-end; justify-content:space-between; height:120px; gap:8px; }
+.bar-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
+.bar { width:100%; background:linear-gradient(to top,#16a34a,#4ade80); border-radius:8px 8px 0 0; animation:growBar 1s cubic-bezier(0.16,1,0.3,1); transform-origin:bottom; }
+@keyframes growBar { from{transform:scaleY(0);} to{transform:scaleY(1);} }
+.bar-label { font-size:9px; color:var(--text3); }
+.notif-item { background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; display:flex; gap:14px; border:1px solid var(--border); cursor:pointer; }
+.notif-item.unread { border-right:4px solid var(--green); background:var(--greenBg); }
+.notif-icon { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.notif-info { flex:1; }
+.notif-title { font-size:13px; font-weight:bold; color:var(--text); }
+.notif-sub { font-size:11px; color:var(--text2); margin-top:4px; line-height:1.5; }
+.notif-time { font-size:9px; color:var(--text3); margin-top:6px; }
+.chat-area { flex:1; overflow-y:auto; background:var(--bg2); padding:16px; display:flex; flex-direction:column; gap:10px; }
+.chat-msg { max-width:80%; padding:12px 16px; border-radius:16px; font-size:13px; line-height:1.6; animation:modalIn .3s; }
+.chat-msg.user { background:var(--green); color:#fff; align-self:flex-start; border-bottom-right-radius:4px; }
+.chat-msg.support { background:var(--card); color:var(--text); align-self:flex-end; border-bottom-left-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.chat-input-bar { background:var(--bg); border-top:1px solid var(--border); padding:12px 16px; display:flex; gap:10px; align-items:center; }
+.chat-input { flex:1; border:2px solid var(--border); border-radius:99px; padding:12px 16px; font-size:13px; font-family:inherit; outline:none; background:var(--bg); color:var(--text); }
+.chat-input:focus { border-color:#22c55e; }
+.chat-send { width:44px; height:44px; border-radius:50%; background:var(--green); color:#fff; border:none; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.profile-header { background:linear-gradient(135deg,#16a34a,#15803d); padding:30px 20px 50px; text-align:center; color:#fff; }
+.profile-avatar { width:90px; height:90px; border-radius:50%; background:#fff; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-size:44px; border:4px solid rgba(255,255,255,0.3); }
+.profile-name { font-size:18px; font-weight:900; }
+.profile-phone { font-size:12px; opacity:0.85; margin-top:4px; }
+.profile-stats { display:flex; justify-content:center; gap:24px; margin-top:18px; }
+.profile-stat-val { font-size:18px; font-weight:900; }
+.profile-stat-label { font-size:10px; opacity:0.8; margin-top:2px; }
+.profile-body { margin-top:-30px; padding:0 18px 20px; }
+.profile-menu { background:var(--card); border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.06); }
+.profile-menu-item { display:flex; align-items:center; gap:14px; padding:16px 18px; border-bottom:1px solid var(--border); cursor:pointer; }
+.profile-menu-item:hover { background:var(--bg2); }
+.profile-menu-item:last-child { border-bottom:none; }
+.pm-icon { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.pm-label { flex:1; font-size:13px; font-weight:bold; color:var(--text); }
+.pm-arrow { color:var(--text3); font-size:14px; }
+.theme-toggle { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--border); }
+.toggle-switch { width:48px; height:26px; background:var(--border); border-radius:99px; position:relative; cursor:pointer; transition:background .3s; }
+.toggle-switch.on { background:var(--green); }
+.toggle-thumb { width:20px; height:20px; background:#fff; border-radius:50%; position:absolute; top:3px; right:3px; transition:transform .3s; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+.toggle-switch.on .toggle-thumb { transform:translateX(-22px); }
+.logout-btn { width:100%; background:#fee2e2; color:#dc2626; border:none; padding:15px; border-radius:14px; font-size:13px; font-weight:bold; cursor:pointer; font-family:inherit; margin-top:14px; }
+.reset-btn { width:100%; background:var(--bg3); color:var(--text2); border:none; padding:13px; border-radius:14px; font-size:12px; font-weight:bold; cursor:pointer; font-family:inherit; margin-top:10px; }
+.shop-balance { background:linear-gradient(135deg,#8b5cf6,#7c3aed); border-radius:20px; padding:18px 20px; color:#fff; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
+.shop-balance-label { font-size:11px; opacity:0.85; }
+.shop-balance-val { font-size:24px; font-weight:900; margin-top:2px; }
+.shop-cat-scroll { display:flex; gap:8px; overflow-x:auto; margin-bottom:16px; padding-bottom:4px; }
+.shop-cat-scroll::-webkit-scrollbar { display:none; }
+.shop-cat { padding:9px 16px; border-radius:99px; background:var(--card); border:1px solid var(--border); font-size:11px; font-weight:bold; color:var(--text2); cursor:pointer; white-space:nowrap; transition:all .2s; }
+.shop-cat.active { background:var(--green); color:#fff; border-color:var(--green); }
+.shop-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+.shop-item { background:var(--card); border-radius:18px; padding:16px 12px; border:1px solid var(--border); text-align:center; cursor:pointer; transition:all .2s; animation:fadeIn .3s; }
+.shop-item:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.08); }
+.shop-item-icon { width:52px; height:52px; margin:0 auto 10px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+.shop-item-name { font-size:12px; font-weight:bold; color:var(--text); margin-bottom:4px; }
+.shop-item-desc { font-size:9px; color:var(--text3); margin-bottom:8px; }
+.shop-item-price { font-size:13px; font-weight:900; color:var(--green); margin-bottom:10px; }
+.shop-buy-btn { width:100%; background:var(--greenBg); color:#15803d; border:none; padding:9px; border-radius:10px; font-size:11px; font-weight:bold; cursor:pointer; font-family:inherit; transition:all .2s; }
+body.dark .shop-buy-btn { color:#4ade80; }
+.shop-buy-btn:hover { background:var(--green); color:#fff; }
+.section-label { font-size:14px; font-weight:bold; color:var(--text); margin:6px 0 12px; display:flex; align-items:center; gap:8px; }
+.modal-input { width:100%; padding:14px 16px; border:2px solid var(--border); border-radius:14px; font-size:15px; font-family:inherit; background:var(--bg); color:var(--text); margin-bottom:16px; text-align:left; direction:ltr; letter-spacing:1px; }
+.modal-input:focus { outline:none; border-color:#22c55e; }
+.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:#1e293b; color:#fff; padding:13px 24px; border-radius:99px; font-size:13px; font-weight:bold; opacity:0; transition:all .3s; z-index:999; pointer-events:none; box-shadow:0 10px 30px rgba(0,0,0,0.3); white-space:nowrap; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+    <!-- AUTH -->
+    <div class="view active" id="view-auth">
+        <div class="auth-wrap">
+            <div class="floating-leaf" style="left:10%;animation-delay:0s;">🍃</div>
+            <div class="floating-leaf" style="left:30%;animation-delay:2s;">♻️</div>
+            <div class="floating-leaf" style="left:60%;animation-delay:4s;">🍃</div>
+            <div class="floating-leaf" style="left:80%;animation-delay:1s;">🌱</div>
+            <div class="auth-logo">
+                <div class="auth-logo-icon">♻️</div>
+                <div class="auth-logo-text">بازنو</div>
+                <div class="auth-logo-sub">بازیافت هوشمند درب منزل</div>
+            </div>
+            <div class="auth-card">
+                <div id="authStep1">
+                    <div class="auth-title">ورود / ثبت‌نام</div>
+                    <div class="auth-sub">شماره موبایل خود را وارد کنید</div>
+                    <div style="margin-bottom:16px;">
+                        <label class="input-label">شماره موبایل</label>
+                        <input type="tel" id="phoneInput" class="input-field en" placeholder="09123456789" maxlength="11">
+                    </div>
+                    <button class="auth-btn ripple" onclick="sendOTP()">دریافت کد تایید</button>
+                    <button class="demo-btn" onclick="demoLogin()">⚡ ورود سریع (نسخه دمو)</button>
+                </div>
+                <div id="authStep2" style="display:none;">
+                    <div class="auth-title">کد تایید</div>
+                    <div class="auth-sub" id="otpSubtitle">کد ارسال شده را وارد کنید</div>
+                    <div class="otp-boxes">
+                        <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,0)">
+                        <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,1)">
+                        <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,2)">
+                        <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,3)">
+                        <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,4)">
+                    </div>
+                    <div class="resend-timer">ارسال مجدد کد تا <span id="timerCount">۳۰</span> ثانیه</div>
+                    <button class="auth-btn ripple" onclick="verifyOTP()">تایید کد</button>
+                    <button class="auth-back" onclick="backToPhone()">← تغییر شماره موبایل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="view" id="view-home">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="logo-circle">♻️</div>
+                <div><div class="cust-title">بازنو</div><div class="cust-sub">سلام، دوست عزیز 👋</div></div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+                <button class="icon-btn" onclick="openPage('support')">💬</button>
+                <button class="icon-btn" onclick="openPage('notifications')">🔔<span class="notif-badge" id="notifBadge">۳</span></button>
+            </div>
+        </div>
+        <div class="fake-map" id="mapArea">
+            <div class="map-block" style="top:5%;left:5%;width:18%;height:15%;"></div>
+            <div class="map-block" style="top:8%;left:40%;width:15%;height:12%;"></div>
+            <div class="map-block" style="top:35%;left:8%;width:14%;height:18%;"></div>
+            <div class="map-block" style="top:70%;left:40%;width:16%;height:14%;"></div>
+            <div class="map-block" style="top:30%;left:78%;width:15%;height:16%;"></div>
+            <div class="map-park" style="top:68%;left:65%;width:25%;height:22%;">
+                <span class="map-tree" style="top:10%;left:15%;">🌳</span>
+                <span class="map-tree" style="top:40%;left:60%;">🌲</span>
+                <span class="map-tree" style="top:65%;left:30%;">🌳</span>
+            </div>
+            <div class="street h" style="top:25%;"></div>
+            <div class="street h" style="top:60%;"></div>
+            <div class="street v" style="left:30%;"></div>
+            <div class="street v" style="left:70%;"></div>
+            <div class="online-count"><span style="width:8px;height:8px;background:#16a34a;border-radius:50%;animation:blink 1.5s infinite;"></span> ۵ راننده آنلاین اطراف شما</div>
+            <div class="nearby-driver" style="top:20%;left:20%;">🛵</div>
+            <div class="nearby-driver" style="top:65%;left:75%;animation-delay:1s;">🛵</div>
+            <div class="nearby-driver" style="top:35%;left:80%;animation-delay:0.5s;">🛵</div>
+            <div class="nearby-driver" style="top:70%;left:15%;animation-delay:1.5s;">🛵</div>
+            <div class="nearby-driver" style="top:15%;left:60%;animation-delay:0.8s;">🛵</div>
+            <div class="route-line" id="routeLine"></div>
+            <div class="status-banner" id="statusBanner"></div>
+            <div class="marker marker-driver" id="driverMarker" style="display:none; top:10%; left:10%;"><div class="marker-pin"><span>🛵</span></div></div>
+            <div class="marker marker-customer" id="marker">
+                <div class="marker-pulse"></div>
+                <div class="marker-pin"><span>♻️</span></div>
+            </div>
+            <div class="loc-card">
+                <div class="loc-icon">📍</div>
+                <div style="flex:1;">
+                    <div class="loc-label">موقعیت انتخابی</div>
+                    <div class="loc-text" id="selectedAddress">تهران، ولنجک، خیابان مقدس اردبیلی</div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <div id="requestSection">
+                <div class="sheet-title">چی برای بازیافت داری؟</div>
+                <div class="waste-grid">
+                    <div class="waste-item selected" data-type="کارتن" data-rate="8000" onclick="selectWaste(this)"><div class="waste-icon">📦</div><div class="waste-name">کارتن</div></div>
+                    <div class="waste-item" data-type="پلاستیک" data-rate="12000" onclick="selectWaste(this)"><div class="waste-icon">🧴</div><div class="waste-name">پلاستیک</div></div>
+                    <div class="waste-item" data-type="نان خشک" data-rate="6000" onclick="selectWaste(this)"><div class="waste-icon">🥖</div><div class="waste-name">نان خشک</div></div>
+                    <div class="waste-item" data-type="آلومینیوم" data-rate="45000" onclick="selectWaste(this)"><div class="waste-icon">🥫</div><div class="waste-name">آلومینیوم</div></div>
+                    <div class="waste-item" data-type="مس" data-rate="180000" onclick="selectWaste(this)"><div class="waste-icon">🥉</div><div class="waste-name">مس</div></div>
+                    <div class="waste-item" data-type="ضایعات دیگر" data-rate="5000" onclick="selectWaste(this)"><div class="waste-icon">🗑️</div><div class="waste-name">ضایعات دیگر</div></div>
+                </div>
+                <div class="price-hint">
+                    <span>💰 نرخ هر کیلو: <b id="priceHint">۸,۰۰۰ تومان</b></span>
+                    <span>⏱️ حدود ۱۰ دقیقه</span>
+                </div>
+                <button class="main-btn ripple" onclick="startRequest()">درخواست بازیافت‌یار ←</button>
+                <button class="schedule-btn" onclick="openSchedule()">📅 رزرو برای زمان دیگر</button>
+            </div>
+            <div class="driver-card" id="driverCard">
+                <div class="dc-top">
+                    <div class="dc-avatar">👨‍✈️</div>
+                    <div class="dc-info">
+                        <div class="dc-name" id="dcName">محمد رضایی</div>
+                        <div class="dc-meta">🛵 موتور نیسان • پلاک ۱۲۳ع۴۵۶</div>
+                    </div>
+                    <div class="dc-rating">⭐ ۴.۹</div>
+                </div>
+                <div class="dc-stats">
+                    <div class="dc-stat"><div class="dc-stat-val" id="etaVal">۳ دقیقه</div><div class="dc-stat-label">زمان رسیدن</div></div>
+                    <div class="dc-stat"><div class="dc-stat-val" id="distVal">۱.۲ km</div><div class="dc-stat-label">فاصله</div></div>
+                    <div class="dc-stat"><div class="dc-stat-val" id="typeVal">کارتن</div><div class="dc-stat-label">نوع بار</div></div>
+                </div>
+                <button class="main-btn ripple" id="actionBtn" onclick="handleAction()" style="background:#1e293b;">📞 تماس با راننده</button>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="nav-item active" onclick="openPage('home')"><span class="ic">🏠</span>خانه</button>
+            <button class="nav-item" onclick="openPage('shop')"><span class="ic">🛍️</span>فروشگاه</button>
+            <button class="nav-item" onclick="openPage('club')"><span class="ic">🏆</span>باشگاه</button>
+            <button class="nav-item" onclick="openPage('history')"><span class="ic">🕐</span>تاریخچه</button>
+            <button class="nav-item" onclick="openPage('profile')"><span class="ic">👤</span>پروفایل</button>
+        </div>
+    </div>
+
+    <!-- SHOP -->
+    <div class="view" id="view-shop">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="logo-circle" style="background:#ede9fe;">🛍️</div>
+                <div><div class="cust-title">فروشگاه بازنو</div><div class="cust-sub">با اعتبار بازیافت خرید کن</div></div>
+            </div>
+        </div>
+        <div class="page-scroll">
+            <div class="shop-balance">
+                <div>
+                    <div class="shop-balance-label">موجودی کیف پول شما</div>
+                    <div class="shop-balance-val" id="shopBalance">۰ تومان</div>
+                </div>
+                <button class="icon-btn" style="background:rgba(255,255,255,0.2);color:#fff;" onclick="openPage('wallet')">👛</button>
+            </div>
+            <div class="shop-cat-scroll" id="shopCats">
+                <div class="shop-cat active" onclick="filterShop('all', this)">🌟 همه</div>
+                <div class="shop-cat" onclick="filterShop('charge', this)">📱 شارژ</div>
+                <div class="shop-cat" onclick="filterShop('car', this)">🚗 خودرو</div>
+                <div class="shop-cat" onclick="filterShop('bill', this)">💡 قبض</div>
+                <div class="shop-cat" onclick="filterShop('charity', this)">❤️ نیکوکاری</div>
+                <div class="shop-cat" onclick="filterShop('fun', this)">🎬 سرگرمی</div>
+            </div>
+            <div class="section-label" id="shopSectionLabel">🌟 همه محصولات</div>
+            <div class="shop-grid" id="shopGrid"></div>
+        </div>
+        <div class="nav">
+            <button class="nav-item" onclick="openPage('home')"><span class="ic">🏠</span>خانه</button>
+            <button class="nav-item active" onclick="openPage('shop')"><span class="ic">🛍️</span>فروشگاه</button>
+            <button class="nav-item" onclick="openPage('club')"><span class="ic">🏆</span>باشگاه</button>
+            <button class="nav-item" onclick="openPage('history')"><span class="ic">🕐</span>تاریخچه</button>
+            <button class="nav-item" onclick="openPage('profile')"><span class="ic">👤</span>پروفایل</button>
+        </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="view" id="view-history">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="logo-circle">🕐</div>
+                <div><div class="cust-title">تاریخچه سفارشات</div><div class="cust-sub" id="historyCount">۰ سفارش</div></div>
+            </div>
+        </div>
+        <div class="page-scroll" id="historyList">
+            <div class="empty-state" id="emptyHistory">
+                <div class="es-icon">📭</div>
+                <div style="font-weight:bold; font-size:14px;">هنوز سفارشی ثبت نکردی</div>
+                <div style="font-size:12px; margin-top:6px;">اولین بازیافتت رو شروع کن!</div>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="nav-item" onclick="openPage('home')"><span class="ic">🏠</span>خانه</button>
+            <button class="nav-item" onclick="openPage('shop')"><span class="ic">🛍️</span>فروشگاه</button>
+            <button class="nav-item" onclick="openPage('club')"><span class="ic">🏆</span>باشگاه</button>
+            <button class="nav-item active" onclick="openPage('history')"><span class="ic">🕐</span>تاریخچه</button>
+            <button class="nav-item" onclick="openPage('profile')"><span class="ic">👤</span>پروفایل</button>
+        </div>
+    </div>
+
+    <!-- CLUB -->
+    <div class="view" id="view-club">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="logo-circle">🏆</div>
+                <div><div class="cust-title">باشگاه مشتریان</div><div class="cust-sub">امتیاز بگیر، پاداش بگیر</div></div>
+            </div>
+        </div>
+        <div class="page-scroll">
+            <div class="club-hero">
+                <div class="club-level-badge" id="clubLevelBadge">🥉 سطح برنزی</div>
+                <div style="font-size:12px;opacity:0.9;">امتیاز شما</div>
+                <div class="club-points" id="clubPoints">۲۵۰</div>
+                <div class="club-progress"><div class="club-progress-fill" id="clubProgressFill"></div></div>
+                <div class="club-progress-label" id="clubProgressLabel">تا سطح نقره‌ای: ۱۵۰ امتیاز مانده</div>
+            </div>
+            <div style="font-size:14px;font-weight:bold;color:var(--text);margin-bottom:12px;">🎁 پاداش‌های قابل دریافت</div>
+            <div class="reward-card">
+                <div class="reward-icon" style="background:#fef3c7;">🎟️</div>
+                <div class="reward-info"><div class="reward-title">کد تخفیف ۲۰,۰۰۰ تومانی</div><div class="reward-sub">نیاز به ۱۰۰ امتیاز</div></div>
+                <button class="reward-btn" onclick="claimReward(100,'🎟️')">دریافت</button>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon" style="background:#dcfce7;">🌱</div>
+                <div class="reward-info"><div class="reward-title">کاشت یک درخت به نام شما</div><div class="reward-sub">نیاز به ۳۰۰ امتیاز</div></div>
+                <button class="reward-btn" onclick="claimReward(300,'🌱')">دریافت</button>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon" style="background:#dbeafe;">💰</div>
+                <div class="reward-info"><div class="reward-title">شارژ ۵۰,۰۰۰ تومانی کیف پول</div><div class="reward-sub">نیاز به ۵۰۰ امتیاز</div></div>
+                <button class="reward-btn" onclick="claimReward(500,'💰')">دریافت</button>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="nav-item" onclick="openPage('home')"><span class="ic">🏠</span>خانه</button>
+            <button class="nav-item" onclick="openPage('shop')"><span class="ic">🛍️</span>فروشگاه</button>
+            <button class="nav-item active" onclick="openPage('club')"><span class="ic">🏆</span>باشگاه</button>
+            <button class="nav-item" onclick="openPage('history')"><span class="ic">🕐</span>تاریخچه</button>
+            <button class="nav-item" onclick="openPage('profile')"><span class="ic">👤</span>پروفایل</button>
+        </div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="view" id="view-impact">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="icon-btn" onclick="openPage('profile')">←</button>
+                <div><div class="cust-title">تأثیر محیط‌زیستی</div><div class="cust-sub">مشارکت شما در نجات زمین</div></div>
+            </div>
+        </div>
+        <div class="page-scroll">
+            <div class="impact-hero">
+                <div style="font-size:12px;opacity:0.9;">مجموع CO₂ صرفه‌جویی شده</div>
+                <div class="impact-big" id="impactCo2">۰ kg</div>
+                <div style="font-size:11px;opacity:0.8;">معادل کاشت <span id="impactTrees">۰</span> درخت 🌳</div>
+            </div>
+            <div class="impact-grid">
+                <div class="impact-card"><div class="impact-ic">💧</div><div class="impact-val" id="impactWater">۰</div><div class="impact-label">لیتر آب صرفه‌جویی شده</div></div>
+                <div class="impact-card"><div class="impact-ic">⚡</div><div class="impact-val" id="impactEnergy">۰</div><div class="impact-label">کیلووات انرژی</div></div>
+                <div class="impact-card"><div class="impact-ic">⚖️</div><div class="impact-val" id="impactWeight">۰</div><div class="impact-label">کیلوگرم بازیافت</div></div>
+                <div class="impact-card"><div class="impact-ic">🛢️</div><div class="impact-val" id="impactOil">۰</div><div class="impact-label">لیتر نفت خام</div></div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">📊 نمودار بازیافت هفتگی (کیلوگرم)</div>
+                <div class="bar-chart">
+                    <div class="bar-item"><div class="bar" style="height:40%;"></div><div class="bar-label">شنبه</div></div>
+                    <div class="bar-item"><div class="bar" style="height:65%;"></div><div class="bar-label">یکشنبه</div></div>
+                    <div class="bar-item"><div class="bar" style="height:30%;"></div><div class="bar-label">دوشنبه</div></div>
+                    <div class="bar-item"><div class="bar" style="height:80%;"></div><div class="bar-label">سه‌شنبه</div></div>
+                    <div class="bar-item"><div class="bar" style="height:55%;"></div><div class="bar-label">چهارشنبه</div></div>
+                    <div class="bar-item"><div class="bar" style="height:90%;"></div><div class="bar-label">پنجشنبه</div></div>
+                    <div class="bar-item"><div class="bar" style="height:70%;"></div><div class="bar-label">جمعه</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WALLET -->
+    <div class="view" id="view-wallet">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="icon-btn" onclick="openPage('home')">←</button>
+                <div><div class="cust-title">کیف پول</div><div class="cust-sub">موجودی و تراکنش‌ها</div></div>
+            </div>
+        </div>
+        <div class="page-scroll">
+            <div class="wallet-card">
+                <div class="wallet-label">موجودی فعلی</div>
+                <div class="wallet-balance" id="walletBalance">۰</div>
+                <div class="wallet-actions">
+                    <button class="wallet-action-btn" onclick="openWithdraw()">💸 برداشت وجه</button>
+                    <button class="wallet-action-btn" onclick="showToast('به زودی: شارژ مستقیم')">➕ شارژ مستقیم</button>
+                </div>
+            </div>
+            <div class="coupon-box">
+                <span style="font-size:20px;">🎟️</span>
+                <input type="text" class="coupon-input" id="couponInput" placeholder="کد تخفیف دارید؟ وارد کنید">
+                <button class="coupon-btn" onclick="applyCoupon()">اعمال</button>
+            </div>
+            <div style="background:var(--card); border-radius:18px; padding:6px 18px; border:1px solid var(--border);">
+                <div style="padding:14px 0 8px; font-size:13px; font-weight:bold; color:var(--text);">تراکنش‌ها</div>
+                <div id="transactionList">
+                    <div class="empty-state" style="padding:30px;"><div style="font-size:12px;">هنوز تراکنشی ندارید</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="view" id="view-profile">
+        <div class="page-scroll" style="padding:0;">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-name">کاربر بازنو</div>
+                <div class="profile-phone" id="profilePhone">—</div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><div class="profile-stat-val" id="statOrders">۰</div><div class="profile-stat-label">سفارش</div></div>
+                    <div class="profile-stat"><div class="profile-stat-val" id="statWeight">۰kg</div><div class="profile-stat-label">بازیافت</div></div>
+                    <div class="profile-stat"><div class="profile-stat-val">۵.۰</div><div class="profile-stat-label">امتیاز</div></div>
+                </div>
+            </div>
+            <div class="profile-body">
+                <div class="profile-menu">
+                    <div class="theme-toggle">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div class="pm-icon" style="background:#e0f2fe;">🌙</div>
+                            <div style="font-size:13px;font-weight:bold;color:var(--text);">حالت تاریک</div>
+                        </div>
+                        <div class="toggle-switch" id="darkToggle" onclick="toggleTheme()"><div class="toggle-thumb"></div></div>
+                    </div>
+                    <div class="profile-menu-item" onclick="openPage('impact')"><div class="pm-icon" style="background:#e0f2fe;">🌍</div><div class="pm-label">تأثیر محیط‌زیستی من</div><div class="pm-arrow">‹</div></div>
+                    <div class="profile-menu-item" onclick="openPage('wallet')"><div class="pm-icon" style="background:#fef9c3;">👛</div><div class="pm-label">کیف پول</div><div class="pm-arrow">‹</div></div>
+                    <div class="profile-menu-item" onclick="showToast('ویرایش اطلاعات')"><div class="pm-icon" style="background:#dbeafe;">✏️</div><div class="pm-label">ویرایش نام و اطلاعات</div><div class="pm-arrow">‹</div></div>
+                    <div class="profile-menu-item" onclick="showToast('آدرس‌های من')"><div class="pm-icon" style="background:#dcfce7;">📍</div><div class="pm-label">آدرس‌های من</div><div class="pm-arrow">‹</div></div>
+                    <div class="profile-menu-item" onclick="showToast('کد دعوت: BAZNO-123')"><div class="pm-icon" style="background:#fef9c3;">🎁</div><div class="pm-label">دعوت از دوستان (۳۰,۰۰۰ هدیه)</div><div class="pm-arrow">‹</div></div>
+                    <div class="profile-menu-item" onclick="openPage('support')"><div class="pm-icon" style="background:#e0f2fe;">💬</div><div class="pm-label">پشتیبانی و راهنمایی</div><div class="pm-arrow">‹</div></div>
+                </div>
+                <button class="logout-btn" onclick="logout()">خروج از حساب کاربری</button>
+                <button class="reset-btn" onclick="resetAll()">🗑️ پاک کردن تمام داده‌ها (شروع از صفر)</button>
+            </div>
+        </div>
+        <div class="nav">
+            <button class="nav-item" onclick="openPage('home')"><span class="ic">🏠</span>خانه</button>
+            <button class="nav-item" onclick="openPage('shop')"><span class="ic">🛍️</span>فروشگاه</button>
+            <button class="nav-item" onclick="openPage('club')"><span class="ic">🏆</span>باشگاه</button>
+            <button class="nav-item" onclick="openPage('history')"><span class="ic">🕐</span>تاریخچه</button>
+            <button class="nav-item active" onclick="openPage('profile')"><span class="ic">👤</span>پروفایل</button>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="view" id="view-notifications">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="icon-btn" onclick="openPage('home')">←</button>
+                <div><div class="cust-title">اعلان‌ها</div><div class="cust-sub">۳ اعلان جدید</div></div>
+            </div>
+        </div>
+        <div class="page-scroll">
+            <div class="notif-item unread" onclick="showToast('باز شد')">
+                <div class="notif-icon" style="background:#fef3c7;">🎟️</div>
+                <div class="notif-info"><div class="notif-title">کد تخفیف جدید دریافت کردید!</div><div class="notif-sub">با کد BAZNO20 از ۲۰,۰۰۰ تومان تخفیف بهره‌مند شوید</div><div class="notif-time">۵ دقیقه پیش</div></div>
+            </div>
+            <div class="notif-item unread" onclick="showToast('باز شد')">
+                <div class="notif-icon" style="background:#dcfce7;">🌍</div>
+                <div class="notif-info"><div class="notif-title">آفرین! شما ۲.۵kg CO₂ صرفه‌جویی کردید</div><div class="notif-sub">با آخرین بازیافت خود به حفظ محیط زیست کمک کردید</div><div class="notif-time">۲ ساعت پیش</div></div>
+            </div>
+            <div class="notif-item unread" onclick="showToast('باز شد')">
+                <div class="notif-icon" style="background:#dbeafe;">🏆</div>
+                <div class="notif-info"><div class="notif-title">به سطح برنزی باشگاه رسیدید</div><div class="notif-sub">۱۰۰ امتیاز دیگر تا دریافت اولین پاداش</div><div class="notif-time">دیروز</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="view" id="view-support">
+        <div class="cust-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="icon-btn" onclick="openPage('home')">←</button>
+                <div><div class="cust-title">پشتیبانی بازنو</div><div class="cust-sub" style="color:#16a34a;">● آنلاین</div></div>
+            </div>
+        </div>
+        <div class="chat-area" id="chatArea">
+            <div class="chat-msg support">سلام! 👋 به پشتیبانی بازنو خوش آمدید. چطور می‌تونم کمکتون کنم؟</div>
+        </div>
+        <div class="chat-input-bar">
+            <input type="text" class="chat-input" id="chatInput" placeholder="پیام خود را بنویسید..." onkeypress="if(event.key==='Enter')sendChat()">
+            <button class="chat-send" onclick="sendChat()">➤</button>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div class="overlay" id="searchOverlay">
+        <div class="modal">
+            <div class="radar"><div class="radar-ring"></div><div class="radar-ring"></div><div class="radar-ring"></div><div class="radar-center">🛵</div></div>
+            <div class="modal-title">در حال جستجوی بازیافت‌یار...</div>
+            <div class="modal-sub">نزدیک‌ترین راننده در حال یافتن است<br>لطفاً صبر کنید</div>
+            <button class="cancel-search-btn" onclick="cancelSearch()">✕ لغو درخواست</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="scheduleModal">
+        <div class="modal">
+            <div class="delivery-icon">📅</div>
+            <div class="modal-title">رزرو زمان‌بندی شده</div>
+            <div class="modal-sub">روز و ساعت دلخواه رو انتخاب کن</div>
+            <div class="day-options">
+                <div class="day-opt selected" onclick="selectDay(this)">امروز</div>
+                <div class="day-opt" onclick="selectDay(this)">فردا</div>
+                <div class="day-opt" onclick="selectDay(this)">پس‌فردا</div>
+            </div>
+            <div class="time-options">
+                <div class="day-opt" onclick="selectTime(this)">۸ تا ۱۰ صبح</div>
+                <div class="day-opt selected" onclick="selectTime(this)">۱۰ تا ۱۲ صبح</div>
+                <div class="day-opt" onclick="selectTime(this)">۱۴ تا ۱۶ عصر</div>
+                <div class="day-opt" onclick="selectTime(this)">۱۶ تا ۱۸ عصر</div>
+            </div>
+            <button class="main-btn ripple" onclick="confirmSchedule()">✅ تایید رزرو</button>
+            <button class="auth-back" onclick="closeSchedule()">انصراف</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="shopModal">
+        <div class="modal">
+            <div class="delivery-icon" id="shopModalIcon">📱</div>
+            <div class="modal-title" id="shopModalName">محصول</div>
+            <div class="modal-sub" id="shopModalDesc">توضیحات</div>
+            <div id="shopPhoneField" style="display:none; text-align:right;">
+                <label class="input-label">شماره تلفن مقصد</label>
+                <input type="tel" id="shopPhoneInput" class="modal-input" placeholder="09123456789" maxlength="11">
+            </div>
+            <div style="text-align:right;">
+                <div class="calc-row"><span class="calc-label">قیمت</span><span class="calc-val" id="shopModalPrice">۰ تومان</span></div>
+                <div class="calc-row"><span class="calc-label">موجودی شما</span><span class="calc-val" id="shopModalBalance">۰ تومان</span></div>
+                <div class="calc-row"><span class="calc-label">موجودی پس از خرید</span><span class="calc-val" id="shopModalAfter" style="color:var(--green);">۰ تومان</span></div>
+            </div>
+            <button class="main-btn ripple" style="margin-top:16px;" onclick="confirmPurchase()">✅ تایید و پرداخت</button>
+            <button class="auth-back" onclick="closeShopModal()">انصراف</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="withdrawModal">
+        <div class="modal">
+            <div class="delivery-icon">💸</div>
+            <div class="modal-title">برداشت وجه</div>
+            <div class="modal-sub">مبلغ و شماره کارت را وارد کنید تا به حسابتان واریز شود</div>
+            <div style="text-align:right;">
+                <label class="input-label">مبلغ برداشت (تومان)</label>
+                <input type="text" id="withdrawAmount" class="modal-input" placeholder="مثلاً 50000">
+                <label class="input-label">شماره کارت (۱۶ رقم)</label>
+                <input type="text" id="withdrawCard" class="modal-input" placeholder="6037XXXXXXXXXXXX" maxlength="16">
+            </div>
+            <div class="calc-row"><span class="calc-label">موجودی شما</span><span class="calc-val" id="withdrawBalance">۰ تومان</span></div>
+            <button class="main-btn ripple" style="margin-top:16px;" onclick="confirmWithdraw()">💸 برداشت وجه</button>
+            <button class="auth-back" onclick="closeWithdraw()">انصراف</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="deliveryModal">
+        <div class="modal">
+            <div class="delivery-icon">⚖️</div>
+            <div class="modal-title">توزین و محاسبه بار</div>
+            <div class="modal-sub">راننده زباله شما را وزن کرد</div>
+            <div style="text-align:right;">
+                <div class="calc-row"><span class="calc-label">نوع ضایعات</span><span class="calc-val" id="calcType">کارتن</span></div>
+                <div class="calc-row"><span class="calc-label">وزن اندازه‌گیری شده</span><span class="calc-val" id="calcWeight">۵.۲ کیلوگرم</span></div>
+                <div class="calc-row"><span class="calc-label">نرخ هر کیلوگرم</span><span class="calc-val" id="calcRate">۸,۰۰۰ تومان</span></div>
+            </div>
+            <div class="calc-total"><span class="calc-total-label">مبلغ قابل پرداخت به شما</span><span class="calc-total-val" id="calcTotal">۴۱,۶۰۰</span></div>
+            <button class="main-btn ripple" onclick="confirmDelivery()">✅ تایید و دریافت وجه</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="ratingModal">
+        <div class="modal">
+            <div class="delivery-icon">🌟</div>
+            <div class="modal-title">به راننده امتیاز بده</div>
+            <div class="modal-sub" id="ratingDriverName">عملکرد راننده چطور بود؟</div>
+            <div class="stars">
+                <span class="star" onclick="setRating(1)">★</span><span class="star" onclick="setRating(2)">★</span><span class="star" onclick="setRating(3)">★</span><span class="star" onclick="setRating(4)">★</span><span class="star" onclick="setRating(5)">★</span>
+            </div>
+            <div class="rating-text" id="ratingText"></div>
+            <button class="main-btn ripple" id="submitRatingBtn" onclick="submitRating()" disabled style="background:#9ca3af;">ثبت امتیاز</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="successModal">
+        <div class="modal">
+            <div class="success-check">✅</div>
+            <div class="modal-title">بازیافت با موفقیت انجام شد!</div>
+            <div class="modal-sub">مبلغ به کیف پول شما اضافه شد</div>
+            <div class="earned-amount" id="successAmount">+۴۱,۶۰۰</div>
+            <div style="font-size:12px; color:var(--text2);">تومان</div>
+            <div style="background:var(--greenBg); border-radius:14px; padding:14px; margin:18px 0; font-size:12px; color:#15803d;">🌍 شما <span id="successCo2" style="font-weight:bold;">۲.۱ کیلوگرم</span> به کاهش CO₂ کمک کردید!</div>
+            <div style="background:#fef3c7; border-radius:14px; padding:12px; margin-bottom:16px; font-size:12px; color:#92400e;">🏆 <span id="successPoints">۵۰ امتیاز</span> به باشگاه شما اضافه شد!</div>
+            <button class="main-btn ripple" onclick="closeSuccess()">عالیه! ادامه بدیم 🎉</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">عملیات موفق</div>
+
+<script>
+// ===== POLYFILL برای مرورگرهای قدیمی ویندوز ۷ =====
+if (!NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
+if (window.HTMLCollection && !HTMLCollection.prototype.forEach) HTMLCollection.prototype.forEach = Array.prototype.forEach;
+if (!String.prototype.includes) String.prototype.includes = String.prototype.indexOf;
+if (!Array.prototype.includes) {
+    Array.prototype.includes = function(v) { return this.indexOf(v) !== -1; };
+}
+
+// ============ STATE (localStorage) ============
+var DEFAULT_STATE = {
+    userPhone: '', loggedIn: false, walletAmount: 0, clubPoints: 250,
+    orderCount: 0, totalWeight: 0, totalCo2: 0,
+    historyItems: [], transactions: [], isDark: false
+};
+var state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function saveState() { try { localStorage.setItem('bazno_save', JSON.stringify(state)); } catch(e) {} }
+function loadState() {
+    try {
+        var saved = localStorage.getItem('bazno_save');
+        if (saved) {
+            var parsed = JSON.parse(saved);
+            for (var key in DEFAULT_STATE) if (parsed.hasOwnProperty(key)) state[key] = parsed[key];
+            return true;
+        }
+    } catch(e) {}
+    return false;
+}
+function resetAll() {
+    playSound('click');
+    if (confirm('آیا مطمئنی؟ تمام داده‌ها پاک می‌شه!')) {
+        localStorage.removeItem('bazno_save');
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        applyState();
+        switchView('auth');
+        document.getElementById('authStep1').style.display = 'block';
+        document.getElementById('authStep2').style.display = 'none';
+        showToast('🗑️ تمام داده‌ها پاک شد');
+    }
+}
+function applyState() {
+    document.body.classList.toggle('dark', state.isDark);
+    document.getElementById('themeBtn').textContent = state.isDark ? '☀️' : '🌙';
+    document.getElementById('darkToggle').classList.toggle('on', state.isDark);
+    document.getElementById('profilePhone').textContent = state.userPhone || '—';
+    renderTransactions(); renderHistory(); updateStats(); updateClub(); updateImpact(); renderShop();
+}
+
+var selectedWaste = { type: 'کارتن', rate: 8000, icon: '📦' };
+var currentRating = 0, driverMoveInterval = null, searchTimeout = null;
+var driverPos = { x: 10, y: 12 }, customerPos = { x: 48, y: 45 }, orderActive = false;
+var pendingPurchase = null, currentShopCat = 'all';
+
+var driverNames = ['محمد رضایی', 'علی کریمی', 'حسین احمدی', 'رضا موسوی', 'امیر قاسمی'];
+var ratingTexts = ['', 'خیلی بد 😞', 'بد 🙁', 'معمولی 😐', 'خوب 🙂', 'عالی! 🤩'];
+var supportReplies = ['ممنون از پیامتون! 🙏 در حال بررسی هستیم.', 'بله، حتماً پیگیری می‌کنیم. ✅', 'کارشناسان ما به زودی با شما تماس می‌گیرند.', 'سوال دیگه‌ای دارید؟ در خدمتم! 😊'];
+
+var shopItems = [
+    { cat:'charge', icon:'📱', bg:'#dbeafe', name:'شارژ ۱۰,۰۰۰ تومانی', desc:'همراه اول / ایرانسل / رایتل', price:10000 },
+    { cat:'charge', icon:'📱', bg:'#dbeafe', name:'شارژ ۲۰,۰۰۰ تومانی', desc:'همراه اول / ایرانسل / رایتل', price:20000 },
+    { cat:'charge', icon:'📱', bg:'#dbeafe', name:'شارژ ۵۰,۰۰۰ تومانی', desc:'همراه اول / ایرانسل / رایتل', price:50000 },
+    { cat:'charge', icon:'🌐', bg:'#e0e7ff', name:'اینترنت ۱ گیگ', desc:'بسته ۷ روزه', price:35000 },
+    { cat:'charge', icon:'🌐', bg:'#e0e7ff', name:'اینترنت ۵ گیگ', desc:'بسته ۳۰ روزه', price:120000 },
+    { cat:'car', icon:'🛣️', bg:'#fef3c7', name:'عوارض شهرداری', desc:'پرداخت عوارض سالانه', price:75000 },
+    { cat:'car', icon:'🚨', bg:'#fee2e2', name:'خلافی خودرو', desc:'استعلام و پرداخت جریمه', price:120000 },
+    { cat:'car', icon:'🛂', bg:'#e0f2fe', name:'عوارض آزادراه', desc:'پرداخت الکترونیکی', price:35000 },
+    { cat:'car', icon:'🔍', bg:'#ede9fe', name:'معاینه فنی', desc:'نوبت‌دهی و پرداخت', price:90000 },
+    { cat:'car', icon:'🏙️', bg:'#d1fae5', name:'طرح ترافیک', desc:'تهران - روزانه', price:45000 },
+    { cat:'bill', icon:'💡', bg:'#fef9c3', name:'قبض برق', desc:'پرداخت آنلاین', price:45000 },
+    { cat:'bill', icon:'🔥', bg:'#ffedd5', name:'قبض گاز', desc:'پرداخت آنلاین', price:38000 },
+    { cat:'bill', icon:'💧', bg:'#e0f2fe', name:'قبض آب', desc:'پرداخت آنلاین', price:25000 },
+    { cat:'bill', icon:'📞', bg:'#dbeafe', name:'قبض موبایل', desc:'پرداخت آنلاین', price:50000 },
+    { cat:'charity', icon:'🧸', bg:'#fce7f3', name:'کمک به کودکان', desc:'خیریه محک', price:20000 },
+    { cat:'charity', icon:'🌳', bg:'#dcfce7', name:'کاشت درخت', desc:'به نام شما', price:15000 },
+    { cat:'charity', icon:'🍞', bg:'#fef3c7', name:'کمک به نیازمندان', desc:'سبد غذایی', price:30000 },
+    { cat:'charity', icon:'🌍', bg:'#d1fae5', name:'حمایت از محیط زیست', desc:'پاکسازی طبیعت', price:25000 },
+    { cat:'fun', icon:'🎬', bg:'#ede9fe', name:'بلیط سینما', desc:'یک سانس', price:60000 },
+    { cat:'fun', icon:'📺', bg:'#e0e7ff', name:'اشتراک فیلم ۱ ماهه', desc:'تماشای آنلاین', price:90000 },
+    { cat:'fun', icon:'🏊', bg:'#e0f2fe', name:'بلیط استخر', desc:'یک جلسه', price:70000 }
+];
+var shopCatNames = { all:'🌟 همه محصولات', charge:'📱 شارژ و اینترنت', car:'🚗 خدمات خودرو', bill:'💡 پرداخت قبض', charity:'❤️ نیکوکاری', fun:'🎬 سرگرمی' };
+
+function renderShop() {
+    var grid = document.getElementById('shopGrid');
+    var items = shopItems.filter(function(i) { return currentShopCat === 'all' || i.cat === currentShopCat; });
+    var html = '';
+    items.forEach(function(item) {
+        var idx = shopItems.indexOf(item);
+        html += '<div class="shop-item" onclick="buyItem(' + idx + ')">' +
+            '<div class="shop-item-icon" style="background:' + item.bg + ';">' + item.icon + '</div>' +
+            '<div class="shop-item-name">' + item.name + '</div>' +
+            '<div class="shop-item-desc">' + item.desc + '</div>' +
+            '<div class="shop-item-price">' + fmt(item.price) + ' تومان</div>' +
+            '<button class="shop-buy-btn">خرید</button></div>';
+    });
+    grid.innerHTML = html;
+    document.getElementById('shopSectionLabel').textContent = shopCatNames[currentShopCat];
+    document.getElementById('shopBalance').textContent = fmt(state.walletAmount) + ' تومان';
+}
+function filterShop(cat, el) {
+    playSound('click');
+    currentShopCat = cat;
+    var cats = document.querySelectorAll('.shop-cat');
+    for (var i = 0; i < cats.length; i++) cats[i].classList.remove('active');
+    el.classList.add('active');
+    renderShop();
+}
+function buyItem(idx) {
+    playSound('click');
+    var item = shopItems[idx];
+    pendingPurchase = item;
+    var needsPhone = (item.cat === 'charge' || item.cat === 'bill');
+    document.getElementById('shopPhoneField').style.display = needsPhone ? 'block' : 'none';
+    document.getElementById('shopPhoneInput').value = '';
+    document.getElementById('shopModalIcon').textContent = item.icon;
+    document.getElementById('shopModalName').textContent = item.name;
+    document.getElementById('shopModalDesc').textContent = item.desc;
+    document.getElementById('shopModalPrice').textContent = fmt(item.price) + ' تومان';
+    document.getElementById('shopModalBalance').textContent = fmt(state.walletAmount) + ' تومان';
+    document.getElementById('shopModalAfter').textContent = fmt(Math.max(0, state.walletAmount - item.price)) + ' تومان';
+    document.getElementById('shopModal').classList.add('show');
+}
+function closeShopModal() { playSound('click'); document.getElementById('shopModal').classList.remove('show'); }
+function confirmPurchase() {
+    if (!pendingPurchase) return;
+    var needsPhone = (pendingPurchase.cat === 'charge' || pendingPurchase.cat === 'bill');
+    var targetPhone = '';
+    if (needsPhone) {
+        targetPhone = normalizeDigits(document.getElementById('shopPhoneInput').value);
+        if (targetPhone.length !== 11 || targetPhone.charAt(0) !== '0') {
+            showToast('⚠️ شماره تلفن مقصد را معتبر وارد کنید');
+            return;
+        }
+    }
+    if (state.walletAmount >= pendingPurchase.price) {
+        state.walletAmount -= pendingPurchase.price;
+        var title = '🛍️ خرید ' + pendingPurchase.name;
+        if (needsPhone) title += ' (' + targetPhone + ')';
+        state.transactions.unshift({ title: title, amount: -pendingPurchase.price, date: 'همین الان' });
+        saveState();
+        renderTransactions(); renderShop();
+        playSound('success');
+        closeShopModal();
+        showToast('✅ خرید موفق! ' + pendingPurchase.name);
+    } else {
+        playSound('click');
+        var needed = pendingPurchase.price - state.walletAmount;
+        showToast('⚠️ موجودی کافی نیست! ' + fmt(needed) + ' تومان کم دارید. بیشتر بازیافت کن! ♻️');
+    }
+}
+
+function openWithdraw() {
+    playSound('click');
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawCard').value = '';
+    document.getElementById('withdrawBalance').textContent = fmt(state.walletAmount) + ' تومان';
+    document.getElementById('withdrawModal').classList.add('show');
+}
+function closeWithdraw() { playSound('click'); document.getElementById('withdrawModal').classList.remove('show'); }
+function confirmWithdraw() {
+    var amount = parseInt(normalizeDigits(document.getElementById('withdrawAmount').value));
+    var card = normalizeDigits(document.getElementById('withdrawCard').value);
+    if (!amount || amount <= 0) { showToast('⚠️ مبلغ معتبر وارد کنید'); return; }
+    if (card.length !== 16) { showToast('⚠️ شماره کارت باید ۱۶ رقم باشد'); return; }
+    if (amount > state.walletAmount) { showToast('⚠️ موجودی کافی نیست! ' + fmt(amount - state.walletAmount) + ' تومان کم دارید'); return; }
+    state.walletAmount -= amount;
+    var cardMask = card.substring(0,4) + '...' + card.substring(12);
+    state.transactions.unshift({ title: '💸 برداشت به کارت ' + cardMask, amount: -amount, date: 'همین الان' });
+    saveState();
+    renderTransactions(); renderShop();
+    closeWithdraw();
+    playSound('success');
+    showToast('✅ مبلغ ' + fmt(amount) + ' تومان به کارت شما واریز شد!');
+}
+
+function playSound(type) {
+    try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        var ctx = new Ctx();
+        var osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sine';
+        if (type === 'click') {
+            osc.frequency.value = 800;
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+            osc.start(); osc.stop(ctx.currentTime + 0.1);
+        } else if (type === 'success') {
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+            osc.start(); osc.stop(ctx.currentTime + 0.5);
+        } else if (type === 'notify') {
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.06, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+            osc.start(); osc.stop(ctx.currentTime + 0.3);
+        }
+    } catch(e) {}
+}
+
+function toggleTheme() {
+    playSound('click');
+    state.isDark = !state.isDark; saveState();
+    document.body.classList.toggle('dark', state.isDark);
+    document.getElementById('themeBtn').textContent = state.isDark ? '☀️' : '🌙';
+    document.getElementById('darkToggle').classList.toggle('on', state.isDark);
+    showToast(state.isDark ? '🌙 حالت تاریک فعال شد' : '☀️ حالت روشن فعال شد');
+}
+
+function toFa(n) { return n.toString().replace(/\d/g, function(d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); }
+function fmt(n) { return toFa(n.toLocaleString('en-US')); }
+function normalizeDigits(str) {
+    var fa = '۰۱۲۳۴۵۶۷۸۹', ar = '٠١٢٣٤٥٦٧٨٩', result = '';
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charAt(i), fi = fa.indexOf(c), ai = ar.indexOf(c);
+        if (fi !== -1) result += fi;
+        else if (ai !== -1) result += ai;
+        else if (c >= '0' && c <= '9') result += c;
+    }
+    return result;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadState(); applyState();
+    if (state.loggedIn) switchView('home');
+    var phoneInput = document.getElementById('phoneInput');
+    if (phoneInput) phoneInput.addEventListener('input', function() { this.value = normalizeDigits(this.value); });
+});
+
+function sendOTP() {
+    playSound('click');
+    var phone = normalizeDigits(document.getElementById('phoneInput').value);
+    document.getElementById('phoneInput').value = phone;
+    if (phone.length !== 11 || phone.charAt(0) !== '0') { showToast('⚠️ شماره باید ۱۱ رقم و با ۰ باشه'); return; }
+    state.userPhone = phone; saveState();
+    document.getElementById('otpSubtitle').textContent = 'کد ارسال شده به ' + phone + ' را وارد کنید';
+    document.getElementById('authStep1').style.display = 'none';
+    document.getElementById('authStep2').style.display = 'block';
+    showToast('📩 کد تایید ارسال شد');
+    startTimer();
+}
+function demoLogin() {
+    playSound('success');
+    state.userPhone = '09120000000'; state.loggedIn = true; saveState();
+    showToast('⚡ ورود دمو موفق!');
+    setTimeout(function() { document.getElementById('profilePhone').textContent = state.userPhone; openPage('home'); }, 500);
+}
+function otpMove(el, idx) {
+    el.value = normalizeDigits(el.value);
+    if (el.value.length === 1) {
+        var boxes = document.querySelectorAll('.otp-box');
+        if (idx < boxes.length - 1) boxes[idx + 1].focus();
+    }
+}
+function startTimer() {
+    var seconds = 30;
+    var t = setInterval(function() {
+        seconds--;
+        document.getElementById('timerCount').textContent = toFa(seconds);
+        if (seconds <= 0) { clearInterval(t); document.getElementById('timerCount').textContent = 'آماده'; }
+    }, 1000);
+}
+function verifyOTP() {
+    var boxes = document.querySelectorAll('.otp-box'), code = '';
+    for (var i = 0; i < boxes.length; i++) code += normalizeDigits(boxes[i].value);
+    if (code.length !== 5) { showToast('⚠️ کد ۵ رقمی را کامل وارد کنید'); return; }
+    playSound('success');
+    state.loggedIn = true; saveState();
+    showToast('✅ ورود موفق! خوش آمدید');
+    setTimeout(function() { document.getElementById('profilePhone').textContent = state.userPhone; openPage('home'); }, 800);
+}
+function backToPhone() { playSound('click'); document.getElementById('authStep2').style.display = 'none'; document.getElementById('authStep1').style.display = 'block'; }
+function logout() {
+    playSound('click');
+    state.loggedIn = false; saveState();
+    switchView('auth');
+    document.getElementById('authStep1').style.display = 'block';
+    document.getElementById('authStep2').style.display = 'none';
+    document.getElementById('phoneInput').value = '';
+    showToast('👋 از حساب خارج شدید (داده‌ها حفظ می‌شن)');
+}
+
+function switchView(id) {
+    var views = document.querySelectorAll('.view');
+    for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
+    document.getElementById('view-' + id).classList.add('active');
+}
+function openPage(page) {
+    playSound('click');
+    switchView(page);
+    if (page === 'notifications') document.getElementById('notifBadge').style.display = 'none';
+    if (page === 'impact') updateImpact();
+    if (page === 'club') updateClub();
+    if (page === 'wallet') renderTransactions();
+    if (page === 'history') renderHistory();
+    if (page === 'shop') renderShop();
+}
+
+function selectWaste(el) {
+    playSound('click');
+    var items = document.querySelectorAll('.waste-item');
+    for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
+    el.classList.add('selected');
+    selectedWaste = { type: el.getAttribute('data-type'), rate: parseInt(el.getAttribute('data-rate')), icon: el.querySelector('.waste-icon').textContent };
+    document.getElementById('priceHint').textContent = fmt(selectedWaste.rate) + ' تومان';
+}
+
+function openSchedule() { playSound('click'); document.getElementById('scheduleModal').classList.add('show'); }
+function closeSchedule() { playSound('click'); document.getElementById('scheduleModal').classList.remove('show'); }
+function selectDay(el) {
+    playSound('click');
+    var days = document.querySelectorAll('.day-options .day-opt');
+    for (var i = 0; i < days.length; i++) days[i].classList.remove('selected');
+    el.classList.add('selected');
+}
+function selectTime(el) {
+    playSound('click');
+    var times = document.querySelectorAll('.time-options .day-opt');
+    for (var i = 0; i < times.length; i++) times[i].classList.remove('selected');
+    el.classList.add('selected');
+}
+function confirmSchedule() { playSound('success'); closeSchedule(); showToast('📅 رزرو شما با موفقیت ثبت شد!'); }
+
+function startRequest() {
+    playSound('click');
+    orderActive = true;
+    document.getElementById('searchOverlay').classList.add('show');
+    searchTimeout = setTimeout(function() {
+        document.getElementById('searchOverlay').classList.remove('show');
+        driverFound();
+    }, 3500);
+}
+function cancelSearch() {
+    playSound('click');
+    clearTimeout(searchTimeout);
+    document.getElementById('searchOverlay').classList.remove('show');
+    orderActive = false;
+    showToast('درخواست لغو شد');
+}
+function driverFound() {
+    playSound('notify');
+    var name = driverNames[Math.floor(Math.random() * driverNames.length)];
+    document.getElementById('dcName').textContent = name;
+    document.getElementById('ratingDriverName').textContent = 'عملکرد ' + name + ' چطور بود؟';
+    document.getElementById('typeVal').textContent = selectedWaste.type;
+    document.getElementById('requestSection').style.display = 'none';
+    document.getElementById('driverCard').classList.add('show');
+    updateStatusBanner('🛵 راننده در مسیر شماست...', '#1e293b');
+    showToast('✅ ' + name + ' درخواست شما را قبول کرد');
+    startDriverMove();
+}
+function startDriverMove() {
+    driverPos = { x: 8 + Math.random() * 15, y: 8 + Math.random() * 15 };
+    var dm = document.getElementById('driverMarker');
+    dm.style.display = 'block';
+    dm.style.left = driverPos.x + '%';
+    dm.style.top = driverPos.y + '%';
+    document.getElementById('routeLine').style.display = 'block';
+    var steps = 0;
+    driverMoveInterval = setInterval(function() {
+        var dx = customerPos.x - driverPos.x, dy = customerPos.y - driverPos.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 1.5) { clearInterval(driverMoveInterval); driverArrived(); return; }
+        driverPos.x += (dx / dist) * 1.0;
+        driverPos.y += (dy / dist) * 1.0;
+        dm.style.left = driverPos.x + '%';
+        dm.style.top = driverPos.y + '%';
+        updateRouteLine();
+        steps++;
+        if (steps % 5 === 0) {
+            document.getElementById('etaVal').textContent = toFa(Math.ceil(dist / 3)) + ' دقیقه';
+            document.getElementById('distVal').textContent = (dist / 10).toFixed(1) + ' km';
+        }
+    }, 200);
+}
+function updateRouteLine() {
+    var line = document.getElementById('routeLine'), map = document.getElementById('mapArea');
+    var w = map.offsetWidth, h = map.offsetHeight;
+    var x1 = driverPos.x / 100 * w, y1 = driverPos.y / 100 * h;
+    var x2 = customerPos.x / 100 * w, y2 = customerPos.y / 100 * h;
+    var len = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    var angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+    line.style.width = len + 'px';
+    line.style.left = x1 + 'px';
+    line.style.top = y1 + 'px';
+    line.style.transform = 'rotate(' + angle + 'deg)';
+    line.style.transformOrigin = 'left center';
+}
+function driverArrived() {
+    playSound('notify');
+    document.getElementById('routeLine').style.display = 'none';
+    updateStatusBanner('📍 راننده رسید! زباله را تحویل دهید', '#16a34a');
+    document.getElementById('etaVal').textContent = 'رسید';
+    document.getElementById('distVal').textContent = '۰';
+    var btn = document.getElementById('actionBtn');
+    btn.textContent = '📦 تحویل زباله و توزین';
+    btn.style.background = '#16a34a';
+    btn.setAttribute('data-state', 'arrived');
+    showToast('🔔 راننده به محل شما رسید');
+}
+function handleAction() {
+    playSound('click');
+    var btn = document.getElementById('actionBtn');
+    if (btn.getAttribute('data-state') === 'arrived') openDelivery();
+    else showToast('📞 در حال تماس با راننده...');
+}
+function openDelivery() {
+    var weight = (3 + Math.random() * 7).toFixed(1);
+    var total = Math.round(weight * selectedWaste.rate / 100) * 100;
+    document.getElementById('calcType').textContent = selectedWaste.type;
+    document.getElementById('calcWeight').textContent = toFa(weight) + ' کیلوگرم';
+    document.getElementById('calcRate').textContent = fmt(selectedWaste.rate) + ' تومان';
+    document.getElementById('calcTotal').textContent = fmt(total);
+    document.getElementById('deliveryModal').classList.add('show');
+    document.getElementById('deliveryModal').setAttribute('data-weight', weight);
+    document.getElementById('deliveryModal').setAttribute('data-total', total);
+}
+function confirmDelivery() {
+    playSound('click');
+    var modal = document.getElementById('deliveryModal');
+    modal.classList.remove('show');
+    document.getElementById('ratingModal').classList.add('show');
+    document.getElementById('ratingModal').setAttribute('data-weight', modal.getAttribute('data-weight'));
+    document.getElementById('ratingModal').setAttribute('data-total', modal.getAttribute('data-total'));
+}
+function setRating(n) {
+    playSound('click');
+    currentRating = n;
+    var stars = document.querySelectorAll('.star');
+    for (var i = 0; i < stars.length; i++) {
+        if (i < n) stars[i].classList.add('filled');
+        else stars[i].classList.remove('filled');
+    }
+    document.getElementById('ratingText').textContent = ratingTexts[n];
+    var btn = document.getElementById('submitRatingBtn');
+    btn.disabled = false; btn.style.background = '#16a34a';
+}
+function submitRating() {
+    playSound('click');
+    var modal = document.getElementById('ratingModal');
+    var weight = parseFloat(modal.getAttribute('data-weight')), total = parseInt(modal.getAttribute('data-total'));
+    modal.classList.remove('show');
+    completeOrder(weight, total);
+}
+function completeOrder(weight, total) {
+    playSound('success');
+    state.orderCount++;
+    state.totalWeight += weight;
+    state.walletAmount += total;
+    var points = Math.round(weight * 10);
+    state.clubPoints += points;
+    var co2 = weight * 0.4;
+    state.totalCo2 += co2;
+    state.transactions.unshift({ title: 'درآمد بازیافت ' + selectedWaste.type, amount: total, date: 'همین الان' });
+    state.historyItems.unshift({ id: '۴۵۲' + toFa(state.orderCount), type: selectedWaste.type, icon: selectedWaste.icon, weight: weight, total: total, rating: currentRating });
+    saveState();
+    document.getElementById('successAmount').textContent = '+' + fmt(total);
+    document.getElementById('successCo2').textContent = toFa(co2.toFixed(1)) + ' کیلوگرم';
+    document.getElementById('successPoints').textContent = toFa(points) + ' امتیاز';
+    document.getElementById('successModal').classList.add('show');
+    renderTransactions(); renderHistory(); updateStats(); updateClub(); updateImpact(); renderShop();
+    resetHome();
+}
+function closeSuccess() { playSound('click'); document.getElementById('successModal').classList.remove('show'); openPage('history'); }
+function resetHome() {
+    orderActive = false; currentRating = 0;
+    document.getElementById('driverMarker').style.display = 'none';
+    document.getElementById('routeLine').style.display = 'none';
+    document.getElementById('statusBanner').classList.remove('show');
+    document.getElementById('requestSection').style.display = 'block';
+    document.getElementById('driverCard').classList.remove('show');
+    var btn = document.getElementById('actionBtn');
+    btn.removeAttribute('data-state');
+    btn.textContent = '📞 تماس با راننده';
+    btn.style.background = '#1e293b';
+    var stars = document.querySelectorAll('.star');
+    for (var i = 0; i < stars.length; i++) stars[i].classList.remove('filled');
+    document.getElementById('ratingText').textContent = '';
+    var rb = document.getElementById('submitRatingBtn');
+    rb.disabled = true; rb.style.background = '#9ca3af';
+}
+function updateStatusBanner(text, color) {
+    var b = document.getElementById('statusBanner');
+    b.textContent = text; b.style.background = color; b.classList.add('show');
+}
+
+function updateImpact() {
+    document.getElementById('impactCo2').textContent = toFa(state.totalCo2.toFixed(1)) + ' kg';
+    document.getElementById('impactTrees').textContent = toFa(Math.floor(state.totalCo2 / 2));
+    document.getElementById('impactWater').textContent = fmt(Math.round(state.totalWeight * 50));
+    document.getElementById('impactEnergy').textContent = fmt(Math.round(state.totalWeight * 15));
+    document.getElementById('impactWeight').textContent = toFa(Math.round(state.totalWeight));
+    document.getElementById('impactOil').textContent = toFa(Math.round(state.totalWeight * 3));
+}
+
+function claimReward(cost, icon) {
+    playSound('click');
+    if (state.clubPoints >= cost) {
+        state.clubPoints -= cost; saveState(); updateClub();
+        playSound('success');
+        showToast(icon + ' پاداش با موفقیت دریافت شد!');
+    } else {
+        showToast('⚠️ امتیاز کافی ندارید! ' + toFa(cost - state.clubPoints) + ' امتیاز کم دارید');
+    }
+}
+function updateClub() {
+    document.getElementById('clubPoints').textContent = fmt(state.clubPoints);
+    var progress = Math.min((state.clubPoints / 400) * 100, 100);
+    document.getElementById('clubProgressFill').style.width = progress + '%';
+    var badge = document.getElementById('clubLevelBadge');
+    var label = document.getElementById('clubProgressLabel');
+    if (state.clubPoints >= 1000) {
+        badge.textContent = '🥇 سطح طلایی';
+        label.textContent = 'به بالاترین سطح رسیدید!';
+    } else if (state.clubPoints >= 400) {
+        badge.textContent = '🥈 سطح نقره‌ای';
+        label.textContent = 'تا سطح طلایی: ' + toFa(1000 - state.clubPoints) + ' امتیاز مانده';
+    } else {
+        badge.textContent = '🥉 سطح برنزی';
+        label.textContent = 'تا سطح نقره‌ای: ' + toFa(400 - state.clubPoints) + ' امتیاز مانده';
+    }
+}
+
+function applyCoupon() {
+    playSound('click');
+    var code = document.getElementById('couponInput').value.trim();
+    if (!code) { showToast('⚠️ کد تخفیف را وارد کنید'); return; }
+    if (code.toUpperCase() === 'BAZNO20') {
+        state.walletAmount += 20000;
+        state.transactions.unshift({ title: '🎟️ کد تخفیف BAZNO20', amount: 20000, date: 'همین الان' });
+        saveState(); renderTransactions();
+        playSound('success');
+        showToast('🎉 کد تخفیف اعمال شد! ۲۰,۰۰۰ تومان اضافه شد');
+        document.getElementById('couponInput').value = '';
+    } else {
+        showToast('❌ کد تخفیف معتبر نیست');
+    }
+}
+
+function sendChat() {
+    var input = document.getElementById('chatInput');
+    var msg = input.value.trim();
+    if (!msg) return;
+    playSound('click');
+    var area = document.getElementById('chatArea');
+    var userDiv = document.createElement('div');
+    userDiv.className = 'chat-msg user';
+    userDiv.textContent = msg;
+    area.appendChild(userDiv);
+    input.value = '';
+    area.scrollTop = area.scrollHeight;
+    setTimeout(function() {
+        playSound('notify');
+        var reply = supportReplies[Math.floor(Math.random() * supportReplies.length)];
+        var supDiv = document.createElement('div');
+        supDiv.className = 'chat-msg support';
+        supDiv.textContent = reply;
+        area.appendChild(supDiv);
+        area.scrollTop = area.scrollHeight;
+    }, 1500);
+}
+
+function renderTransactions() {
+    var html = '';
+    state.transactions.forEach(function(t) {
+        var isPlus = t.amount > 0;
+        html += '<div class="transaction-item">' +
+            '<div class="tr-icon" style="background:' + (isPlus ? 'var(--greenLight)' : '#fee2e2') + ';">' + (isPlus ? '💰' : '🛍️') + '</div>' +
+            '<div class="tr-info"><div class="tr-title">' + t.title + '</div><div class="tr-date">' + t.date + '</div></div>' +
+            '<div class="tr-amount ' + (isPlus ? 'tr-plus' : 'tr-minus') + '">' + (isPlus ? '+' : '-') + fmt(Math.abs(t.amount)) + '</div></div>';
+    });
+    document.getElementById('transactionList').innerHTML = html || '<div class="empty-state" style="padding:30px;"><div style="font-size:12px;">هنوز تراکنشی ندارید</div></div>';
+    document.getElementById('walletBalance').textContent = fmt(state.walletAmount);
+}
+function renderHistory() {
+    var list = document.getElementById('historyList');
+    document.getElementById('historyCount').textContent = toFa(state.orderCount) + ' سفارش';
+    var html = '';
+    state.historyItems.forEach(function(h) {
+        html += '<div class="order-history-card"><div class="order-h-top"><span class="order-h-id">سفارش #' + h.id + '</span><span class="order-status status-done">✓ تکمیل شده</span></div><div class="order-h-main"><div class="order-h-icon">' + h.icon + '</div><div class="order-h-info"><div class="order-h-type">' + h.type + '</div><div class="order-h-date">امروز</div></div><div class="order-h-price">+' + fmt(h.total) + ' ت</div></div><div class="order-h-detail"><span>⚖️ ' + toFa(h.weight) + ' کیلوگرم</span><span>⭐ ' + toFa(h.rating) + '.۰</span></div></div>';
+    });
+    list.innerHTML = html || '<div class="empty-state"><div class="es-icon">📭</div><div style="font-weight:bold;font-size:14px;">هنوز سفارشی ثبت نکردی</div></div>';
+}
+function updateStats() {
+    document.getElementById('statOrders').textContent = toFa(state.orderCount);
+    document.getElementById('statWeight').textContent = toFa(Math.round(state.totalWeight)) + 'kg';
+}
+
+document.getElementById('mapArea').addEventListener('click', function(e) {
+    if (orderActive) return;
+    var rect = this.getBoundingClientRect();
+    var x = ((e.clientX - rect.left) / rect.width) * 100;
+    var y = ((e.clientY - rect.top) / rect.height) * 100;
+    customerPos = { x: x, y: y };
+    var marker = document.getElementById('marker');
+    marker.style.left = x + '%';
+    marker.style.top = y + '%';
+    document.getElementById('selectedAddress').textContent = 'موقعیت جدید انتخاب شد';
+});
+
+var toastTimer;
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+</script>
+</body>
+</html>
